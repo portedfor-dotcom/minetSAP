@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>СИНДИКАТ АЛОГО ПЛАМЕНИ // ТЕРМИНАЛ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
@@ -846,29 +849,14 @@ var HIGH_RANKS = ['crimson', 'heart'];
 
 // ====== ДАННЫЕ ======
 function loadData() {
-  // Сначала пытаемся загрузить из localStorage (данные текущей сессии)
-  var savedMembers = localStorage.getItem('sap_members');
-  var savedNews = localStorage.getItem('sap_news');
-  
-  if (savedMembers) {
-    try {
-      window.MEMBERS = JSON.parse(savedMembers);
-    } catch (e) {
-      window.MEMBERS = [];
-    }
-  } else if (DATA.members && DATA.members.length > 0) {
+  // ВСЕГДА берём данные из встроенного DATA — все видят одно и то же
+  if (DATA.members && DATA.members.length > 0) {
     window.MEMBERS = DATA.members;
   } else {
     window.MEMBERS = [];
   }
   
-  if (savedNews) {
-    try {
-      window.NEWS = JSON.parse(savedNews);
-    } catch (e) {
-      window.NEWS = [];
-    }
-  } else if (DATA.news && DATA.news.length > 0) {
+  if (DATA.news && DATA.news.length > 0) {
     window.NEWS = DATA.news;
   } else {
     window.NEWS = [];
@@ -876,8 +864,6 @@ function loadData() {
 }
 
 function saveData() {
-  localStorage.setItem('sap_members', JSON.stringify(window.MEMBERS));
-  localStorage.setItem('sap_news', JSON.stringify(window.NEWS));
   // Обновляем встроенные данные (будут встроены при скачивании)
   DATA.members = window.MEMBERS;
   DATA.news = window.NEWS;
