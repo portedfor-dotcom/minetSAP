@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
+<html lang="ru"><script src="blob:https://portedfor-dotcom.github.io/409c7c08-574f-4666-9b60-5d4c91b14427"></script><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>СИНДИКАТ АЛОГО ПЛАМЕНИ // ТЕРМИНАЛ</title>
@@ -581,7 +579,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 </style>
-</head>
+<style type="text/css">.video-ads{display:none!important}#player-ads{display:none!important}#watch7-sidebar-ads{display:none!important}#AdSense{display:none!important}#homepage-sidebar-ads{display:none!important}#page-container>#page>#header{display:none!important}#content #page-manager #masthead-ad{display:none!important}#body-container #page-container #video-masthead-iframe{display:none!important}ytd-promoted-sparkles-web-renderer{display:none!important}ytd-compact-promoted-item-renderer{display:none!important}ytd-display-ad-renderer{display:none!important}#feedmodule-PRO{display:none!important}#homepage-chrome-side-promo{display:none!important}#search-pva{display:none!important}#watch-branded-actions{display:none!important}#watch-buy-urls{display:none!important}.carousel-offer-url-container{display:none!important}.promoted-videos{display:none!important}.watch-extra-info-column{display:none!important}.watch-extra-info-right{display:none!important}a[href^="http://www.youtube.com/cthru?"]{display:none!important}</style></head>
 <body>
 
 <div class="monitor">
@@ -598,14 +596,14 @@ body {
 
       <!-- НАВИГАЦИЯ -->
       <div class="nav" id="main-nav">
-        <button class="nav-btn active" onclick="switchTab('home')">Главная</button>
+        <button class="nav-btn" onclick="switchTab('home')">Главная</button>
         <button class="nav-btn" onclick="switchTab('registry')">Реестр</button>
         <button class="nav-btn" onclick="switchTab('news')">Новости</button>
         <button class="nav-btn" onclick="switchTab('charter')">Устав</button>
       </div>
 
       <!-- ГЛАВНАЯ -->
-      <div id="tab-home" class="tab-content active">
+      <div id="tab-home" class="tab-content">
         <div class="card">
           <div class="card-title">О КЛАНЕ</div>
           <div class="card-text">
@@ -651,10 +649,10 @@ body {
       <div id="tab-registry" class="tab-content">
         <div class="card">
           <div class="card-title">РЕЕСТР УЧАСТНИКОВ</div>
-          <div id="registry-admin-btns" style="display:none;margin-bottom:15px;">
+          <div id="registry-admin-btns" style="display: block; margin-bottom: 15px;">
             <button class="btn" onclick="showMemberForm()">+ Добавить участника</button>
           </div>
-          <div id="member-form" class="admin-form" style="display:none;">
+          <div id="member-form" class="admin-form" style="display: none;">
             <input type="text" id="m-nick" placeholder="Никнейм *">
             <select id="m-rank">
               <option value="">-- Выберите звание * --</option>
@@ -666,7 +664,7 @@ body {
             </select>
             <input type="number" id="m-points" placeholder="Очки (необязательно)">
             <input type="text" id="m-contact" placeholder="Telegram @nickname">
-            <div id="contact-required-msg" style="display:none;color:var(--amber);font-size:0.9rem;margin-bottom:10px;">
+            <div id="contact-required-msg" style="display: block; color: var(--amber); font-size: 0.9rem; margin-bottom: 10px;">
               ⚠ Для звания "Багровый Свет" и выше поле связи обязательно
             </div>
             <button class="btn" onclick="saveMember()">Принять в клан</button>
@@ -674,9 +672,9 @@ body {
           </div>
           <table class="registry-table">
             <thead>
-              <tr><th>НИК</th><th>ЗВАНИЕ</th><th>ОЧКИ</th><th>СВЯЗЬ</th><th id="th-actions" style="display:none;">ДЕЙСТВИЯ</th></tr>
+              <tr><th>НИК</th><th>ЗВАНИЕ</th><th>ОЧКИ</th><th>СВЯЗЬ</th><th id="th-actions" style="display: table-cell;">ДЕЙСТВИЯ</th></tr>
             </thead>
-            <tbody id="registry-body"></tbody>
+            <tbody id="registry-body"><tr><td><strong>minet</strong></td><td><span class="rank-badge rank-heart">Сердце</span></td><td><input type="number" class="inline-points" value="9999" onchange="updatePoints(0, this.value)" title="Кликните и введите очки"></td><td>-</td><td><button class="btn btn-small btn-secondary" onclick="editMember(0)" title="Редактировать">✏️</button> <button class="btn btn-small btn-secondary" onclick="deleteMember(0)" title="Удалить">🗑️</button></td></tr></tbody>
           </table>
         </div>
       </div>
@@ -685,7 +683,7 @@ body {
       <div id="tab-news" class="tab-content">
         <div class="card">
           <div class="card-title">ЛЕНТА НОВОСТЕЙ</div>
-          <div id="news-admin-btns" style="display:none;margin-bottom:15px;">
+          <div id="news-admin-btns" style="display: block; margin-bottom: 15px;">
             <button class="btn" onclick="showNewsForm()">+ Добавить новость</button>
           </div>
           <div id="news-form" class="admin-form" style="display:none;">
@@ -754,12 +752,12 @@ body {
       </div>
 
       <!-- АДМИНИСТРАЦИЯ -->
-      <div id="tab-admin" class="tab-content">
+      <div id="tab-admin" class="tab-content active">
         <!-- Экран ввода пароля -->
-        <div id="admin-login-screen">
+        <div id="admin-login-screen" style="display: none;">
           <div class="admin-login-box">
             <div class="flame-icon" style="font-size:3rem;margin-bottom:20px;">🔥</div>
-            <h3>> ДОСТУП ОГРАНИЧЕН</h3>
+            <h3>&gt; ДОСТУП ОГРАНИЧЕН</h3>
             <div style="color:var(--text-dim);margin-bottom:25px;">Введите пароль администратора</div>
             <input type="password" id="admin-pw" placeholder="••••" onkeydown="if(event.key==='Enter')loginAdmin()">
             <br>
@@ -770,7 +768,7 @@ body {
         </div>
 
         <!-- Дашборд админа -->
-        <div id="admin-dashboard" class="admin-dashboard">
+        <div id="admin-dashboard" class="admin-dashboard show">
           <div class="card">
             <div class="card-title">ПАНЕЛЬ АДМИНИСТРАТОРА</div>
             <div style="color:var(--red-glow);margin-bottom:20px;text-align:center;font-size:1.1rem;">🔓 РЕЖИМ АДМИНИСТРАТОРА АКТИВЕН</div>
@@ -810,7 +808,7 @@ body {
 
       <!-- FOOTER -->
       <div class="footer">
-        С.А.П. // ТЕРМИНАЛ ДОСТУПА // <span id="footer-date"></span>
+        С.А.П. // ТЕРМИНАЛ ДОСТУПА // <span id="footer-date">2026</span>
       </div>
 
     </div>
@@ -1222,5 +1220,5 @@ window.onload = function() {
 };
 </script>
 
-</body>
-</html>
+
+</body></html>
