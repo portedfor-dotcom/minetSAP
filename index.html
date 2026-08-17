@@ -249,7 +249,22 @@ body {
   padding-left: 15px;
 }
 
-/* === ОШИБКА ЗАГРУЗКИ === */
+.loading-box {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-box h3 {
+  color: var(--amber);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  animation: pulse 1.5s infinite;
+}
+
+.loading-box p {
+  color: var(--text-dim);
+}
+
 .load-error {
   background: var(--card);
   border: 1px solid var(--red);
@@ -277,23 +292,6 @@ body {
   border-radius: 3px;
   color: var(--amber);
   font-family: inherit;
-}
-
-/* === ИНДИКАТОР ЗАГРУЗКИ === */
-.loading-box {
-  text-align: center;
-  padding: 60px 20px;
-}
-
-.loading-box h3 {
-  color: var(--amber);
-  font-size: 1.3rem;
-  margin-bottom: 15px;
-  animation: pulse 1.5s infinite;
-}
-
-.loading-box p {
-  color: var(--text-dim);
 }
 
 .registry-table {
@@ -629,7 +627,6 @@ body {
   <div class="screen-bezel">
     <div class="screen-content">
 
-      <!-- ШАПКА -->
       <div class="header">
         <div class="flame-icon" onclick="switchTab('admin')" title="Вход для администрации">🔥</div>
         <h1>СИНДИКАТ АЛОГО ПЛАМЕНИ</h1>
@@ -637,7 +634,6 @@ body {
         <div class="motto">«Власть в наших руках, пламя в наших сердцах»</div>
       </div>
 
-      <!-- НАВИГАЦИЯ -->
       <div class="nav" id="main-nav">
         <button class="nav-btn active" onclick="switchTab('home')">Главная</button>
         <button class="nav-btn" onclick="switchTab('registry')">Реестр</button>
@@ -645,7 +641,6 @@ body {
         <button class="nav-btn" onclick="switchTab('charter')">Устав</button>
       </div>
 
-      <!-- ИНДИКАТОР ЗАГРУЗКИ (пока data.js не загрузился) -->
       <div id="loading-screen" class="tab-content active">
         <div class="loading-box">
           <div class="flame-icon" style="font-size:3rem;margin-bottom:20px;">🔥</div>
@@ -654,25 +649,22 @@ body {
         </div>
       </div>
 
-      <!-- ОШИБКА ЗАГРУЗКИ -->
       <div id="tab-error" class="tab-content">
         <div class="load-error">
           <h3>> ОШИБКА ПОДКЛЮЧЕНИЯ</h3>
           <p>Не удалось загрузить файл <code>data.js</code></p>
           <p><b>Возможные причины:</b></p>
-          <p>• Файл <code>data.js</code> не залит на GitHub</p>
-          <p>• Неправильное имя файла (должно быть <code>data.js</code>, с маленькой буквы)</p>
+          <p>• Файл <code>data.js</code> не залит</p>
+          <p>• Неправильное имя файла (должно быть <code>data.js</code>)</p>
           <p>• Файл повреждён или пустой</p>
-          <p>• Проблемы с соединением</p>
           <br>
-          <p style="color:var(--amber)"><b>Для админа:</b> зайди в админ-панель (🔥) и работай в офлайн-режиме. Данные сохранятся в браузере, потом скачай <code>data.js</code> и залей на GitHub.</p>
+          <p style="color:var(--amber)"><b>Для админа:</b> зайди в админ-панель и работай в офлайн-режиме.</p>
           <br>
-          <button class="btn" onclick="retryLoad()">🔄 ПОВТОРИТЬ ПОПЫТКУ</button>
+          <button class="btn" onclick="retryLoad()">🔄 ПОВТОРИТЬ</button>
           <button class="btn btn-secondary" onclick="forceAdminMode()">🔓 ВОЙТИ КАК АДМИН</button>
         </div>
       </div>
 
-      <!-- ГЛАВНАЯ -->
       <div id="tab-home" class="tab-content">
         <div class="card">
           <div class="card-title">О КЛАНЕ</div>
@@ -715,7 +707,6 @@ body {
         </div>
       </div>
 
-      <!-- РЕЕСТР -->
       <div id="tab-registry" class="tab-content">
         <div class="card">
           <div class="card-title">РЕЕСТР УЧАСТНИКОВ</div>
@@ -749,7 +740,6 @@ body {
         </div>
       </div>
 
-      <!-- НОВОСТИ -->
       <div id="tab-news" class="tab-content">
         <div class="card">
           <div class="card-title">ЛЕНТА НОВОСТЕЙ</div>
@@ -767,7 +757,6 @@ body {
         </div>
       </div>
 
-      <!-- УСТАВ -->
       <div id="tab-charter" class="tab-content">
         <div class="card">
           <div class="card-title">УСТАВ КЛАНА «СИНДИКАТ АЛОГО ПЛАМЕНИ»</div>
@@ -821,9 +810,7 @@ body {
         </div>
       </div>
 
-      <!-- АДМИНИСТРАЦИЯ -->
       <div id="tab-admin" class="tab-content">
-        <!-- Экран ввода пароля -->
         <div id="admin-login-screen">
           <div class="admin-login-box">
             <div class="flame-icon" style="font-size:3rem;margin-bottom:20px;">🔥</div>
@@ -837,7 +824,6 @@ body {
           </div>
         </div>
 
-        <!-- Дашборд админа -->
         <div id="admin-dashboard" class="admin-dashboard">
           <div class="card">
             <div class="card-title">ПАНЕЛЬ АДМИНИСТРАТОРА</div>
@@ -849,7 +835,6 @@ body {
               <button class="btn" onclick="showChangePassword()">🔑 ИЗМЕНИТЬ ПАРОЛЬ</button>
             </div>
 
-            <!-- Смена пароля -->
             <div id="change-pw-form" class="admin-section" style="display:none;">
               <h4>СМЕНА ПАРОЛЯ</h4>
               <input type="password" id="pw-old" placeholder="Старый пароль">
@@ -859,14 +844,12 @@ body {
               <button class="btn btn-secondary" onclick="hideChangePassword()">ОТМЕНА</button>
             </div>
 
-            <!-- Управление реестром -->
             <div class="admin-section">
               <h4>👥 УПРАВЛЕНИЕ РЕЕСТРОМ</h4>
               <p style="color:var(--text-dim);margin-bottom:15px;">Добавляйте, редактируйте и удаляйте участников клана. Очки можно менять прямо в таблице — кликните по числу. Чем больше очков — тем выше в реестре.</p>
               <button class="btn" onclick="switchTab('registry');showMemberForm();">ПЕРЕЙТИ К РЕЕСТРУ</button>
             </div>
 
-            <!-- Управление новостями -->
             <div class="admin-section">
               <h4>📰 УПРАВЛЕНИЕ НОВОСТЯМИ</h4>
               <p style="color:var(--text-dim);margin-bottom:15px;">Добавляйте и удаляйте новости клана.</p>
@@ -876,7 +859,6 @@ body {
         </div>
       </div>
 
-      <!-- FOOTER -->
       <div class="footer">
         С.А.П. // ТЕРМИНАЛ ДОСТУПА // <span id="footer-date"></span>
       </div>
@@ -886,14 +868,12 @@ body {
 </div>
 
 <script>
-// ====== КОНФИГ ======
 var ADMIN_PASSWORD = '8217';
 var isAdmin = false;
 var editingMemberId = null;
 var editingNewsId = null;
 var dataLoaded = false;
 
-// ====== РАНГИ ======
 var RANKS = {
   temp: { name: 'Временное гражданство', short: 'вр. гр.', cls: 'rank-temp', color: '#663300' },
   spark: { name: 'Искра Пламени', short: 'Искра', cls: 'rank-spark', color: '#993300' },
@@ -904,66 +884,44 @@ var RANKS = {
 
 var HIGH_RANKS = ['crimson', 'heart'];
 
-// ====== ЗАГРУЗКА ДАННЫХ (НЕУБИВАЕМАЯ) ======
 function loadDataFromFile() {
   var cacheBuster = '?t=' + Date.now();
-  var urls = ['data.js' + cacheBuster, 'Data.js' + cacheBuster];
-  var currentUrl = 0;
-
-  function tryNext() {
-    if (currentUrl >= urls.length) {
-      // Все варианты имени файла не сработали
-      showLoadError();
-      return;
-    }
-
-    var script = document.createElement('script');
-    script.src = urls[currentUrl];
-    currentUrl++;
-
-    script.onload = function() {
-      if (typeof DATA !== 'undefined' && DATA !== null && typeof DATA === 'object') {
-        // Валидация структуры
-        if (Array.isArray(DATA.members) && Array.isArray(DATA.news)) {
-          window.MEMBERS = DATA.members;
-          window.NEWS = DATA.news;
-          dataLoaded = true;
-          finishLoading();
-        } else {
-          console.error('data.js: неверная структура DATA');
-          tryNext();
-        }
+  var script = document.createElement('script');
+  script.src = 'data.js' + cacheBuster;
+  
+  script.onload = function() {
+    if (typeof DATA !== 'undefined' && DATA !== null && typeof DATA === 'object') {
+      if (Array.isArray(DATA.members) && Array.isArray(DATA.news)) {
+        window.MEMBERS = DATA.members;
+        window.NEWS = DATA.news;
+        dataLoaded = true;
+        finishLoading();
       } else {
-        console.error('data.js: переменная DATA не найдена');
-        tryNext();
+        showLoadError();
       }
-    };
-
-    script.onerror = function() {
-      console.error('Не удалось загрузить: ' + script.src);
-      tryNext();
-    };
-
-    // Таймаут 5 секунд на загрузку
-    var timeout = setTimeout(function() {
-      script.onerror();
-    }, 5000);
-
-    script.onload = (function(originalOnload) {
-      return function() {
-        clearTimeout(timeout);
-        originalOnload();
-      };
-    })(script.onload);
-
-    document.head.appendChild(script);
-  }
-
-  tryNext();
+    } else {
+      showLoadError();
+    }
+  };
+  
+  script.onerror = function() {
+    showLoadError();
+  };
+  
+  var timeout = setTimeout(function() {
+    showLoadError();
+  }, 5000);
+  
+  var originalOnload = script.onload;
+  script.onload = function() {
+    clearTimeout(timeout);
+    originalOnload();
+  };
+  
+  document.head.appendChild(script);
 }
 
 function finishLoading() {
-  // Скрываем экран загрузки, показываем главную
   document.getElementById('loading-screen').classList.remove('active');
   document.getElementById('tab-home').classList.add('active');
   document.getElementById('footer-date').textContent = new Date().getFullYear();
@@ -973,10 +931,6 @@ function finishLoading() {
 function showLoadError() {
   document.getElementById('loading-screen').classList.remove('active');
   document.getElementById('tab-error').classList.add('active');
-  // Даём возможность войти как админ даже без data.js
-  document.querySelector('.flame-icon').onclick = function() {
-    switchTab('admin');
-  };
 }
 
 function retryLoad() {
@@ -990,11 +944,6 @@ function forceAdminMode() {
   switchTab('admin');
 }
 
-function saveData() {
-  // Ничего не сохраняем в localStorage — только в памяти для скачивания
-}
-
-// ====== НАВИГАЦИЯ ======
 function switchTab(tab) {
   var tabs = document.querySelectorAll('.tab-content');
   var btns = document.querySelectorAll('.nav-btn');
@@ -1013,7 +962,6 @@ function switchTab(tab) {
   if (tab === 'admin') renderAdmin();
 }
 
-// ====== АДМИНКА ======
 function renderAdmin() {
   if (isAdmin) {
     document.getElementById('admin-login-screen').style.display = 'none';
@@ -1058,7 +1006,6 @@ function updateAdminUI() {
   if (thActions) thActions.style.display = isAdmin ? 'table-cell' : 'none';
 }
 
-// ====== СМЕНА ПАРОЛЯ ======
 function showChangePassword() {
   document.getElementById('change-pw-form').style.display = 'block';
 }
@@ -1082,7 +1029,6 @@ function changePassword() {
   hideChangePassword();
 }
 
-// ====== СКАЧИВАНИЕ DATA.JS ======
 function downloadData() {
   var members = window.MEMBERS || [];
   var news = window.NEWS || [];
@@ -1090,9 +1036,9 @@ function downloadData() {
   var membersJSON = JSON.stringify(members, null, 2);
   var newsJSON = JSON.stringify(news, null, 2);
   
-  var content = 'var DATA = {\n' +
-    '  members: ' + membersJSON + ',\n' +
-    '  news: ' + newsJSON + '\n' +
+  var content = 'var DATA={\\n' +
+    '  members:' + membersJSON.replace(/\\n/g, '\\n  ') + ',\\n' +
+    '  news:' + newsJSON.replace(/\\n/g, '\\n  ') + '\\n' +
     '};';
   
   var blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
@@ -1105,16 +1051,14 @@ function downloadData() {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   
-  alert('> ФАЙЛ СОХРАНЁН: data.js\n> Замени старый файл на GitHub этим.');
+  alert('> ФАЙЛ СОХРАНЁН: data.js\\n> Замени старый файл на GitHub этим.');
 }
 
-// ====== INLINE EDIT ОЧКИ ======
 function updatePoints(index, value) {
   window.MEMBERS[index].points = value;
   renderRegistry();
 }
 
-// ====== РЕЕСТР ======
 function renderRegistry() {
   window.MEMBERS.sort(function(a, b) {
     var pa = parseInt(a.points) || 0;
@@ -1221,7 +1165,6 @@ function deleteMember(index) {
   renderRegistry();
 }
 
-// ====== НОВОСТИ ======
 function renderNews() {
   var list = document.getElementById('news-list');
   var html = '';
@@ -1233,7 +1176,7 @@ function renderNews() {
       html += '<div class="news-item">';
       html += '<div class="news-date">' + escapeHTML(n.date) + '</div>';
       html += '<div class="news-title">' + escapeHTML(n.title) + '</div>';
-      html += '<div class="news-text">' + escapeHTML(n.text).replace(/\n/g, '<br>') + '</div>';
+      html += '<div class="news-text">' + escapeHTML(n.text).replace(/\\n/g, '<br>') + '</div>';
       if (n.img) html += '<img src="' + escapeHTML(n.img) + '" class="news-img">';
       if (isAdmin) {
         html += '<div style="margin-top:10px;">';
@@ -1299,21 +1242,16 @@ function deleteNews(index) {
   renderNews();
 }
 
-// ====== УТИЛИТЫ ======
 function escapeHTML(str) {
   if (!str) return '';
   var s = String(str);
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// ====== ИНИЦИАЛИЗАЦИЯ ======
 window.onload = function() {
-  // Инициализируем пустые массивы на случай если data.js не загрузится
   window.MEMBERS = [];
   window.NEWS = [];
   isAdmin = false;
-  
-  // Запускаем загрузку data.js
   loadDataFromFile();
 };
 </script>
