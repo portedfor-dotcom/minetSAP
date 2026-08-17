@@ -4,6 +4,13 @@
 // НЕ ТРОГАЙ структуру — только содержимое массивов.
 
 var DATA = {
-  members: [],
+  members: [
+  {
+    "nick": "ьВЫАЫ",
+    "rank": "spark",
+    "points": "",
+    "contact": ""
+  }
+],
   news: []
 };
