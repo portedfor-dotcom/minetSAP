@@ -249,6 +249,53 @@ body {
   padding-left: 15px;
 }
 
+/* === ОШИБКА ЗАГРУЗКИ === */
+.load-error {
+  background: var(--card);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  padding: 30px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.load-error h3 {
+  color: var(--red-glow);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+}
+
+.load-error p {
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+
+.load-error code {
+  background: rgba(204,0,0,0.1);
+  padding: 2px 8px;
+  border-radius: 3px;
+  color: var(--amber);
+  font-family: inherit;
+}
+
+/* === ИНДИКАТОР ЗАГРУЗКИ === */
+.loading-box {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-box h3 {
+  color: var(--amber);
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  animation: pulse 1.5s infinite;
+}
+
+.loading-box p {
+  color: var(--text-dim);
+}
+
 .registry-table {
   width: 100%;
   border-collapse: collapse;
@@ -598,8 +645,35 @@ body {
         <button class="nav-btn" onclick="switchTab('charter')">Устав</button>
       </div>
 
+      <!-- ИНДИКАТОР ЗАГРУЗКИ (пока data.js не загрузился) -->
+      <div id="loading-screen" class="tab-content active">
+        <div class="loading-box">
+          <div class="flame-icon" style="font-size:3rem;margin-bottom:20px;">🔥</div>
+          <h3>> ЗАГРУЗКА ДАННЫХ...</h3>
+          <p>Подключение к терминалу С.А.П.</p>
+        </div>
+      </div>
+
+      <!-- ОШИБКА ЗАГРУЗКИ -->
+      <div id="tab-error" class="tab-content">
+        <div class="load-error">
+          <h3>> ОШИБКА ПОДКЛЮЧЕНИЯ</h3>
+          <p>Не удалось загрузить файл <code>data.js</code></p>
+          <p><b>Возможные причины:</b></p>
+          <p>• Файл <code>data.js</code> не залит на GitHub</p>
+          <p>• Неправильное имя файла (должно быть <code>data.js</code>, с маленькой буквы)</p>
+          <p>• Файл повреждён или пустой</p>
+          <p>• Проблемы с соединением</p>
+          <br>
+          <p style="color:var(--amber)"><b>Для админа:</b> зайди в админ-панель (🔥) и работай в офлайн-режиме. Данные сохранятся в браузере, потом скачай <code>data.js</code> и залей на GitHub.</p>
+          <br>
+          <button class="btn" onclick="retryLoad()">🔄 ПОВТОРИТЬ ПОПЫТКУ</button>
+          <button class="btn btn-secondary" onclick="forceAdminMode()">🔓 ВОЙТИ КАК АДМИН</button>
+        </div>
+      </div>
+
       <!-- ГЛАВНАЯ -->
-      <div id="tab-home" class="tab-content active">
+      <div id="tab-home" class="tab-content">
         <div class="card">
           <div class="card-title">О КЛАНЕ</div>
           <div class="card-text">
@@ -817,6 +891,7 @@ var ADMIN_PASSWORD = '8217';
 var isAdmin = false;
 var editingMemberId = null;
 var editingNewsId = null;
+var dataLoaded = false;
 
 // ====== РАНГИ ======
 var RANKS = {
@@ -829,35 +904,94 @@ var RANKS = {
 
 var HIGH_RANKS = ['crimson', 'heart'];
 
-// ====== ЗАГРУЗКА ДАННЫХ С КЭШБАСТЕРОМ ======
-// data.js загружается с ?t=текущее_время — всегда свежие данные, без кэша
+// ====== ЗАГРУЗКА ДАННЫХ (НЕУБИВАЕМАЯ) ======
 function loadDataFromFile() {
   var cacheBuster = '?t=' + Date.now();
-  var script = document.createElement('script');
-  script.src = 'data.js' + cacheBuster;
-  script.onload = function() {
-    if (typeof DATA !== 'undefined') {
-      window.MEMBERS = DATA.members || [];
-      window.NEWS = DATA.news || [];
-      // Синхронизируем localStorage для работы админки
-      localStorage.setItem('sap_members', JSON.stringify(window.MEMBERS));
-      localStorage.setItem('sap_news', JSON.stringify(window.NEWS));
-      // Перерисовываем текущую вкладку
-      if (document.getElementById('tab-registry').classList.contains('active')) renderRegistry();
-      if (document.getElementById('tab-news').classList.contains('active')) renderNews();
+  var urls = ['data.js' + cacheBuster, 'Data.js' + cacheBuster];
+  var currentUrl = 0;
+
+  function tryNext() {
+    if (currentUrl >= urls.length) {
+      // Все варианты имени файла не сработали
+      showLoadError();
+      return;
     }
+
+    var script = document.createElement('script');
+    script.src = urls[currentUrl];
+    currentUrl++;
+
+    script.onload = function() {
+      if (typeof DATA !== 'undefined' && DATA !== null && typeof DATA === 'object') {
+        // Валидация структуры
+        if (Array.isArray(DATA.members) && Array.isArray(DATA.news)) {
+          window.MEMBERS = DATA.members;
+          window.NEWS = DATA.news;
+          dataLoaded = true;
+          finishLoading();
+        } else {
+          console.error('data.js: неверная структура DATA');
+          tryNext();
+        }
+      } else {
+        console.error('data.js: переменная DATA не найдена');
+        tryNext();
+      }
+    };
+
+    script.onerror = function() {
+      console.error('Не удалось загрузить: ' + script.src);
+      tryNext();
+    };
+
+    // Таймаут 5 секунд на загрузку
+    var timeout = setTimeout(function() {
+      script.onerror();
+    }, 5000);
+
+    script.onload = (function(originalOnload) {
+      return function() {
+        clearTimeout(timeout);
+        originalOnload();
+      };
+    })(script.onload);
+
+    document.head.appendChild(script);
+  }
+
+  tryNext();
+}
+
+function finishLoading() {
+  // Скрываем экран загрузки, показываем главную
+  document.getElementById('loading-screen').classList.remove('active');
+  document.getElementById('tab-home').classList.add('active');
+  document.getElementById('footer-date').textContent = new Date().getFullYear();
+  updateAdminUI();
+}
+
+function showLoadError() {
+  document.getElementById('loading-screen').classList.remove('active');
+  document.getElementById('tab-error').classList.add('active');
+  // Даём возможность войти как админ даже без data.js
+  document.querySelector('.flame-icon').onclick = function() {
+    switchTab('admin');
   };
-  script.onerror = function() {
-    console.error('Не удалось загрузить data.js');
-    window.MEMBERS = [];
-    window.NEWS = [];
-  };
-  document.head.appendChild(script);
+}
+
+function retryLoad() {
+  document.getElementById('tab-error').classList.remove('active');
+  document.getElementById('loading-screen').classList.add('active');
+  loadDataFromFile();
+}
+
+function forceAdminMode() {
+  document.getElementById('tab-error').classList.remove('active');
+  switchTab('admin');
 }
 
 function saveData() {
-  localStorage.setItem('sap_members', JSON.stringify(window.MEMBERS));
-  localStorage.setItem('sap_news', JSON.stringify(window.NEWS));
+  // Ничего не сохраняем в localStorage — только в памяти для скачивания
 }
 
 // ====== НАВИГАЦИЯ ======
@@ -867,7 +1001,7 @@ function switchTab(tab) {
   for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
   document.getElementById('tab-' + tab).classList.add('active');
-  if (tab !== 'admin') {
+  if (tab !== 'admin' && tab !== 'error' && tab !== 'loading') {
     var navBtns = document.querySelectorAll('.nav-btn');
     var tabNames = ['home', 'registry', 'news', 'charter'];
     for (var i = 0; i < navBtns.length; i++) {
@@ -950,18 +1084,16 @@ function changePassword() {
 
 // ====== СКАЧИВАНИЕ DATA.JS ======
 function downloadData() {
-  // Формируем красивый JSON
-  var membersJSON = JSON.stringify(window.MEMBERS, null, 2);
-  var newsJSON = JSON.stringify(window.NEWS, null, 2);
+  var members = window.MEMBERS || [];
+  var news = window.NEWS || [];
   
-  var content = '// ====== ДАННЫЕ СИНДИКАТА АЛОГО ПЛАМЕНИ ======\n' +
-    '// Этот файл хранит участников и новости клана.\n' +
-    '// Заменяй его на GitHub при обновлениях.\n' +
-    '// НЕ ТРОГАЙ структуру — только содержимое массивов.\n\n' +
-    'var DATA = {\n' +
+  var membersJSON = JSON.stringify(members, null, 2);
+  var newsJSON = JSON.stringify(news, null, 2);
+  
+  var content = 'var DATA = {\n' +
     '  members: ' + membersJSON + ',\n' +
     '  news: ' + newsJSON + '\n' +
-    '};\n';
+    '};';
   
   var blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
   var url = URL.createObjectURL(blob);
@@ -979,7 +1111,6 @@ function downloadData() {
 // ====== INLINE EDIT ОЧКИ ======
 function updatePoints(index, value) {
   window.MEMBERS[index].points = value;
-  saveData();
   renderRegistry();
 }
 
@@ -1068,7 +1199,6 @@ function saveMember() {
   } else {
     window.MEMBERS.push(member);
   }
-  saveData();
   hideMemberForm();
   renderRegistry();
   alert('> УЧАСТНИК СОХРАНЁН');
@@ -1088,7 +1218,6 @@ function editMember(index) {
 function deleteMember(index) {
   if (!confirm('> УДАЛИТЬ УЧАСТНИКА "' + window.MEMBERS[index].nick + '"?')) return;
   window.MEMBERS.splice(index, 1);
-  saveData();
   renderRegistry();
 }
 
@@ -1150,7 +1279,6 @@ function saveNews() {
   } else {
     window.NEWS.unshift(news);
   }
-  saveData();
   hideNewsForm();
   renderNews();
   alert('> НОВОСТЬ СОХРАНЕНА');
@@ -1168,7 +1296,6 @@ function editNews(index) {
 function deleteNews(index) {
   if (!confirm('> УДАЛИТЬ НОВОСТЬ?')) return;
   window.NEWS.splice(index, 1);
-  saveData();
   renderNews();
 }
 
@@ -1181,26 +1308,13 @@ function escapeHTML(str) {
 
 // ====== ИНИЦИАЛИЗАЦИЯ ======
 window.onload = function() {
-  // Очищаем старые данные из localStorage
-  localStorage.removeItem('sap_members');
-  localStorage.removeItem('sap_news');
-  
-  // Всегда начинаем с обычного режима
+  // Инициализируем пустые массивы на случай если data.js не загрузится
+  window.MEMBERS = [];
+  window.NEWS = [];
   isAdmin = false;
   
-  // Загружаем данные из data.js (с кэшбастером — всегда свежие)
+  // Запускаем загрузку data.js
   loadDataFromFile();
-  
-  document.getElementById('footer-date').textContent = new Date().getFullYear();
-  updateAdminUI();
-  
-  // Убедимся, что админ-дашборд скрыт
-  if (document.getElementById('admin-dashboard')) {
-    document.getElementById('admin-dashboard').classList.remove('show');
-  }
-  if (document.getElementById('admin-login-screen')) {
-    document.getElementById('admin-login-screen').style.display = 'block';
-  }
 };
 </script>
 
