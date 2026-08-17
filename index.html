@@ -1,9 +1,8 @@
-<html lang="ru"><script src="blob:https://portedfor-dotcom.github.io/1ee5e01c-1cdc-4d14-b03e-88cd002743f8"></script><head>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <title>СИНДИКАТ АЛОГО ПЛАМЕНИ // ТЕРМИНАЛ</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap');
@@ -115,11 +114,13 @@ body {
   transition: all 0.3s;
   position: relative;
   filter: drop-shadow(0 0 8px rgba(255,26,26,0.6));
+  animation: pulse 2s infinite;
 }
 
 .flame-icon:hover {
   transform: scale(1.3);
   filter: drop-shadow(0 0 25px var(--red-glow));
+  animation: none;
 }
 
 .flame-icon::after {
@@ -143,14 +144,6 @@ body {
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.7; transform: scale(1.1); }
-}
-
-.flame-icon {
-  animation: pulse 2s infinite;
-}
-
-.flame-icon:hover {
-  animation: none;
 }
 
 .header h1 {
@@ -582,7 +575,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--red-dim); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--red); }
 </style>
-<style type="text/css">.video-ads{display:none!important}#player-ads{display:none!important}#watch7-sidebar-ads{display:none!important}#AdSense{display:none!important}#homepage-sidebar-ads{display:none!important}#page-container>#page>#header{display:none!important}#content #page-manager #masthead-ad{display:none!important}#body-container #page-container #video-masthead-iframe{display:none!important}ytd-promoted-sparkles-web-renderer{display:none!important}ytd-compact-promoted-item-renderer{display:none!important}ytd-display-ad-renderer{display:none!important}#feedmodule-PRO{display:none!important}#homepage-chrome-side-promo{display:none!important}#search-pva{display:none!important}#watch-branded-actions{display:none!important}#watch-buy-urls{display:none!important}.carousel-offer-url-container{display:none!important}.promoted-videos{display:none!important}.watch-extra-info-column{display:none!important}.watch-extra-info-right{display:none!important}a[href^="http://www.youtube.com/cthru?"]{display:none!important}</style></head>
+</head>
 <body>
 
 <div class="monitor">
@@ -599,14 +592,14 @@ body {
 
       <!-- НАВИГАЦИЯ -->
       <div class="nav" id="main-nav">
-        <button class="nav-btn" onclick="switchTab('home')">Главная</button>
+        <button class="nav-btn active" onclick="switchTab('home')">Главная</button>
         <button class="nav-btn" onclick="switchTab('registry')">Реестр</button>
         <button class="nav-btn" onclick="switchTab('news')">Новости</button>
         <button class="nav-btn" onclick="switchTab('charter')">Устав</button>
       </div>
 
       <!-- ГЛАВНАЯ -->
-      <div id="tab-home" class="tab-content">
+      <div id="tab-home" class="tab-content active">
         <div class="card">
           <div class="card-title">О КЛАНЕ</div>
           <div class="card-text">
@@ -652,10 +645,10 @@ body {
       <div id="tab-registry" class="tab-content">
         <div class="card">
           <div class="card-title">РЕЕСТР УЧАСТНИКОВ</div>
-          <div id="registry-admin-btns" style="display: block; margin-bottom: 15px;">
+          <div id="registry-admin-btns" style="display:none;margin-bottom:15px;">
             <button class="btn" onclick="showMemberForm()">+ Добавить участника</button>
           </div>
-          <div id="member-form" class="admin-form" style="display: none;">
+          <div id="member-form" class="admin-form" style="display:none;">
             <input type="text" id="m-nick" placeholder="Никнейм *">
             <select id="m-rank">
               <option value="">-- Выберите звание * --</option>
@@ -675,9 +668,9 @@ body {
           </div>
           <table class="registry-table">
             <thead>
-              <tr><th>НИК</th><th>ЗВАНИЕ</th><th>ОЧКИ</th><th>СВЯЗЬ</th><th id="th-actions" style="display: table-cell;">ДЕЙСТВИЯ</th></tr>
+              <tr><th>НИК</th><th>ЗВАНИЕ</th><th>ОЧКИ</th><th>СВЯЗЬ</th><th id="th-actions" style="display:none;">ДЕЙСТВИЯ</th></tr>
             </thead>
-            <tbody id="registry-body"><tr><td><strong>фцва</strong></td><td><span class="rank-badge rank-temp">вр. гр.</span></td><td><input type="number" class="inline-points" value="" onchange="updatePoints(0, this.value)" title="Кликните и введите очки"></td><td>-</td><td><button class="btn btn-small btn-secondary" onclick="editMember(0)" title="Редактировать">✏️</button> <button class="btn btn-small btn-secondary" onclick="deleteMember(0)" title="Удалить">🗑️</button></td></tr></tbody>
+            <tbody id="registry-body"></tbody>
           </table>
         </div>
       </div>
@@ -686,7 +679,7 @@ body {
       <div id="tab-news" class="tab-content">
         <div class="card">
           <div class="card-title">ЛЕНТА НОВОСТЕЙ</div>
-          <div id="news-admin-btns" style="display: block; margin-bottom: 15px;">
+          <div id="news-admin-btns" style="display:none;margin-bottom:15px;">
             <button class="btn" onclick="showNewsForm()">+ Добавить новость</button>
           </div>
           <div id="news-form" class="admin-form" style="display:none;">
@@ -755,12 +748,12 @@ body {
       </div>
 
       <!-- АДМИНИСТРАЦИЯ -->
-      <div id="tab-admin" class="tab-content active">
+      <div id="tab-admin" class="tab-content">
         <!-- Экран ввода пароля -->
-        <div id="admin-login-screen" style="display: none;">
+        <div id="admin-login-screen">
           <div class="admin-login-box">
             <div class="flame-icon" style="font-size:3rem;margin-bottom:20px;">🔥</div>
-            <h3>&gt; ДОСТУП ОГРАНИЧЕН</h3>
+            <h3>> ДОСТУП ОГРАНИЧЕН</h3>
             <div style="color:var(--text-dim);margin-bottom:25px;">Введите пароль администратора</div>
             <input type="password" id="admin-pw" placeholder="••••" onkeydown="if(event.key==='Enter')loginAdmin()">
             <br>
@@ -771,14 +764,14 @@ body {
         </div>
 
         <!-- Дашборд админа -->
-        <div id="admin-dashboard" class="admin-dashboard show">
+        <div id="admin-dashboard" class="admin-dashboard">
           <div class="card">
             <div class="card-title">ПАНЕЛЬ АДМИНИСТРАТОРА</div>
             <div style="color:var(--red-glow);margin-bottom:20px;text-align:center;font-size:1.1rem;">🔓 РЕЖИМ АДМИНИСТРАТОРА АКТИВЕН</div>
 
             <div class="admin-btn-row">
               <button class="btn btn-secondary" onclick="exitAdmin()">⬅ ВЫЙТИ В ОБЫЧНЫЙ РЕЖИМ</button>
-              <button class="btn" onclick="downloadSite()">💾 СКАЧАТЬ ФАЙЛ</button>
+              <button class="btn" onclick="downloadData()">💾 СКАЧАТЬ DATA.JS</button>
               <button class="btn" onclick="showChangePassword()">🔑 ИЗМЕНИТЬ ПАРОЛЬ</button>
             </div>
 
@@ -811,7 +804,7 @@ body {
 
       <!-- FOOTER -->
       <div class="footer">
-        С.А.П. // ТЕРМИНАЛ ДОСТУПА // <span id="footer-date">2026</span>
+        С.А.П. // ТЕРМИНАЛ ДОСТУПА // <span id="footer-date"></span>
       </div>
 
     </div>
@@ -819,15 +812,6 @@ body {
 </div>
 
 <script>
-// ====== ВСТРОЕННЫЕ ДАННЫЕ ======\n// ВСТАВЛЯЙ НОВЫЕ ДАННЫЕ МЕЖДУ МАРКЕРАМИ\n// НАЧАЛО ДАННЫХ >>>\nvar DATA = {\n  members: [
-  {
-    "nick": "фцва",
-    "rank": "temp",
-    "points": "",
-    "contact": ""
-  }
-],\n  news: []\n};\n// <<< КОНЕЦ ДАННЫХ
-
 // ====== КОНФИГ ======
 var ADMIN_PASSWORD = '8217';
 var isAdmin = false;
@@ -845,26 +829,35 @@ var RANKS = {
 
 var HIGH_RANKS = ['crimson', 'heart'];
 
-// ====== ДАННЫЕ ======
-function loadData() {
-  // ВСЕГДА берём данные из встроенного DATA — все видят одно и то же
-  if (DATA.members && DATA.members.length > 0) {
-    window.MEMBERS = DATA.members;
-  } else {
+// ====== ЗАГРУЗКА ДАННЫХ С КЭШБАСТЕРОМ ======
+// data.js загружается с ?t=текущее_время — всегда свежие данные, без кэша
+function loadDataFromFile() {
+  var cacheBuster = '?t=' + Date.now();
+  var script = document.createElement('script');
+  script.src = 'data.js' + cacheBuster;
+  script.onload = function() {
+    if (typeof DATA !== 'undefined') {
+      window.MEMBERS = DATA.members || [];
+      window.NEWS = DATA.news || [];
+      // Синхронизируем localStorage для работы админки
+      localStorage.setItem('sap_members', JSON.stringify(window.MEMBERS));
+      localStorage.setItem('sap_news', JSON.stringify(window.NEWS));
+      // Перерисовываем текущую вкладку
+      if (document.getElementById('tab-registry').classList.contains('active')) renderRegistry();
+      if (document.getElementById('tab-news').classList.contains('active')) renderNews();
+    }
+  };
+  script.onerror = function() {
+    console.error('Не удалось загрузить data.js');
     window.MEMBERS = [];
-  }
-  
-  if (DATA.news && DATA.news.length > 0) {
-    window.NEWS = DATA.news;
-  } else {
     window.NEWS = [];
-  }
+  };
+  document.head.appendChild(script);
 }
 
 function saveData() {
-  // Обновляем встроенные данные (будут встроены при скачивании)
-  DATA.members = window.MEMBERS;
-  DATA.news = window.NEWS;
+  localStorage.setItem('sap_members', JSON.stringify(window.MEMBERS));
+  localStorage.setItem('sap_news', JSON.stringify(window.NEWS));
 }
 
 // ====== НАВИГАЦИЯ ======
@@ -955,56 +948,47 @@ function changePassword() {
   hideChangePassword();
 }
 
-// ====== СКАЧИВАНИЕ ======
-function downloadSite() {
-  // Сохраняем текущие данные
-  saveData();
-  
-  // Получаем текущий HTML
-  var pageHTML = document.documentElement.outerHTML;
-  
-  // Формируем JSON с данными
+// ====== СКАЧИВАНИЕ DATA.JS ======
+function downloadData() {
+  // Формируем красивый JSON
   var membersJSON = JSON.stringify(window.MEMBERS, null, 2);
   var newsJSON = JSON.stringify(window.NEWS, null, 2);
   
-  // Формируем новый блок DATA
-  var newDataBlock = '// ====== ВСТРОЕННЫЕ ДАННЫЕ ======\\n// ВСТАВЛЯЙ НОВЫЕ ДАННЫЕ МЕЖДУ МАРКЕРАМИ\\n// НАЧАЛО ДАННЫХ >>>\\nvar DATA = {\\n  members: ' + membersJSON + ',\\n  news: ' + newsJSON + '\\n};\\n// <<< КОНЕЦ ДАННЫХ';
+  var content = '// ====== ДАННЫЕ СИНДИКАТА АЛОГО ПЛАМЕНИ ======\n' +
+    '// Этот файл хранит участников и новости клана.\n' +
+    '// Заменяй его на GitHub при обновлениях.\n' +
+    '// НЕ ТРОГАЙ структуру — только содержимое массивов.\n\n' +
+    'var DATA = {\n' +
+    '  members: ' + membersJSON + ',\n' +
+    '  news: ' + newsJSON + '\n' +
+    '};\n';
   
-  // Ищем старый блок DATA по маркерам и заменяем
-  var dataRegex = /\/\/ ====== ВСТРОЕННЫЕ ДАННЫЕ ======[\s\S]*?\/\/ <<< КОНЕЦ ДАННЫХ/;
-  
-  if (dataRegex.test(pageHTML)) {
-    pageHTML = pageHTML.replace(dataRegex, newDataBlock);
-  }
-  
-  // Скачиваем полный HTML
-  var blob = new Blob([pageHTML], { type: 'text/html;charset=utf-8' });
+  var blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'index.html';
+  a.download = 'data.js';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   
-  alert('> ФАЙЛ СОХРАНЁН: index.html\\n> Замени старый файл на GitHub этим.');
+  alert('> ФАЙЛ СОХРАНЁН: data.js\n> Замени старый файл на GitHub этим.');
 }
 
 // ====== INLINE EDIT ОЧКИ ======
 function updatePoints(index, value) {
   window.MEMBERS[index].points = value;
   saveData();
-  renderRegistry(); // Пересортируем после изменения очков
+  renderRegistry();
 }
 
 // ====== РЕЕСТР ======
 function renderRegistry() {
-  // Сортируем по очкам (больше очков = выше в списке)
   window.MEMBERS.sort(function(a, b) {
     var pa = parseInt(a.points) || 0;
     var pb = parseInt(b.points) || 0;
-    return pb - pa; // По убыванию
+    return pb - pa;
   });
   
   var tbody = document.getElementById('registry-body');
@@ -1197,11 +1181,19 @@ function escapeHTML(str) {
 
 // ====== ИНИЦИАЛИЗАЦИЯ ======
 window.onload = function() {
-  // Всегда начинаем с обычного режима (не админ)
+  // Очищаем старые данные из localStorage
+  localStorage.removeItem('sap_members');
+  localStorage.removeItem('sap_news');
+  
+  // Всегда начинаем с обычного режима
   isAdmin = false;
-  loadData();
+  
+  // Загружаем данные из data.js (с кэшбастером — всегда свежие)
+  loadDataFromFile();
+  
   document.getElementById('footer-date').textContent = new Date().getFullYear();
   updateAdminUI();
+  
   // Убедимся, что админ-дашборд скрыт
   if (document.getElementById('admin-dashboard')) {
     document.getElementById('admin-dashboard').classList.remove('show');
@@ -1212,5 +1204,5 @@ window.onload = function() {
 };
 </script>
 
-
-</body></html>
+</body>
+</html>
