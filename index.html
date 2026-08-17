@@ -1029,18 +1029,11 @@ function changePassword() {
   hideChangePassword();
 }
 
+// ===== ИСПРАВЛЕННАЯ ФУНКЦИЯ СКАЧИВАНИЯ =====
 function downloadData() {
   var members = window.MEMBERS || [];
   var news = window.NEWS || [];
-  
-  var membersJSON = JSON.stringify(members, null, 2);
-  var newsJSON = JSON.stringify(news, null, 2);
-  
-  var content = 'var DATA={\\n' +
-    '  members:' + membersJSON.replace(/\\n/g, '\\n  ') + ',\\n' +
-    '  news:' + newsJSON.replace(/\\n/g, '\\n  ') + '\\n' +
-    '};';
-  
+  var content = 'var DATA={members:' + JSON.stringify(members) + ',news:' + JSON.stringify(news) + '};';
   var blob = new Blob([content], { type: 'application/javascript;charset=utf-8' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
@@ -1050,8 +1043,7 @@ function downloadData() {
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  
-  alert('> ФАЙЛ СОХРАНЁН: data.js\\n> Замени старый файл на GitHub этим.');
+  alert('> ФАЙЛ СОХРАНЁН: data.js\n> Замени старый файл на GitHub этим.');
 }
 
 function updatePoints(index, value) {
@@ -1155,7 +1147,7 @@ function editMember(index) {
   document.getElementById('m-rank').value = m.rank;
   document.getElementById('m-points').value = m.points;
   document.getElementById('m-contact').value = m.contact;
-  checkContactRequired();
+  checkContactRequired(); // Показываем/скрываем предупреждение о контакте
   editingMemberId = index;
 }
 
@@ -1176,7 +1168,7 @@ function renderNews() {
       html += '<div class="news-item">';
       html += '<div class="news-date">' + escapeHTML(n.date) + '</div>';
       html += '<div class="news-title">' + escapeHTML(n.title) + '</div>';
-      html += '<div class="news-text">' + escapeHTML(n.text).replace(/\\n/g, '<br>') + '</div>';
+      html += '<div class="news-text">' + escapeHTML(n.text).replace(/\n/g, '<br>') + '</div>';
       if (n.img) html += '<img src="' + escapeHTML(n.img) + '" class="news-img">';
       if (isAdmin) {
         html += '<div style="margin-top:10px;">';
@@ -1210,18 +1202,23 @@ function saveNews() {
   var img = document.getElementById('n-img').value.trim();
   if (!title) { alert('> ВВЕДИТЕ ЗАГОЛОВОК'); return; }
   if (!text) { alert('> ВВЕДИТЕ ТЕКСТ НОВОСТИ'); return; }
+  
   var news = {
     title: title,
     text: text,
-    img: img || '',
-    date: new Date().toLocaleString('ru-RU')
+    img: img || ''
   };
+  
   if (editingNewsId !== null) {
+    // Сохраняем старую дату при редактировании
+    news.date = window.NEWS[editingNewsId].date;
     window.NEWS[editingNewsId] = news;
     editingNewsId = null;
   } else {
+    news.date = new Date().toLocaleString('ru-RU');
     window.NEWS.unshift(news);
   }
+  
   hideNewsForm();
   renderNews();
   alert('> НОВОСТЬ СОХРАНЕНА');
